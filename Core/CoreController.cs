@@ -5,6 +5,7 @@ using MoodPlusAPI.Utils;
 namespace MoodPlusAPI.Core
 {
     [Authorize]
+    [ApiController]
     public class CoreController : ControllerBase
     {
         public CoreController() { }

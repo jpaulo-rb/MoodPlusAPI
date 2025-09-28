@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MoodPlusAPI.Core;
 using MoodPlusAPI.Empresas;
+using MoodPlusAPI.Eventos;
 using MoodPlusAPI.Extensions;
 using MoodPlusAPI.MongoDb;
 using MoodPlusAPI.Moods;
@@ -136,11 +137,14 @@ builder.Services.AddScoped(typeof(CoreRepository<>));
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<UsuarioRepository>();
 
+builder.Services.AddScoped<EmpresaService>();
+builder.Services.AddScoped<EmpresaRepository>();
+
 builder.Services.AddScoped<MoodService>();
 builder.Services.AddScoped<MoodRepository>();
 
-builder.Services.AddScoped<EmpresaService>();
-builder.Services.AddScoped<EmpresaRepository>();
+builder.Services.AddScoped<EventoService>();
+builder.Services.AddScoped<EventoRepository>();
 
 #endregion
 
@@ -179,7 +183,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var mongoDb = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
-    await mongoDb.ConfigMongoIndexes(); // apenas criação de índices async
+    await mongoDb.ConfigMongoIndexes();
 }
 
 app.Run();

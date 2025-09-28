@@ -9,9 +9,7 @@ using MoodPlusAPI.Utils;
 
 namespace MoodPlusAPI.Moods
 {
-    [ApiVersion(1.0, Deprecated = true)]
     [ApiVersion(1.1)]
-    [ApiController]
     [Route("api/v{v:apiVersion}/[controller]")]
     public class MoodController : CoreController
     {
@@ -119,7 +117,7 @@ namespace MoodPlusAPI.Moods
         [Authorize(Policy = "Usuario")]
         public async Task<ActionResult> DeletarMood(DateOnly data)
         {
-            var result = await _moodService.DeletarMood(new ObjectId(_requestContext.UsuarioSessao.Id), data);
+            var result = await _moodService.DeletarMood(data);
 
             if (!result.IsSuccess)
             {

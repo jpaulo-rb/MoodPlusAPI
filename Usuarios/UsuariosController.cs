@@ -12,7 +12,6 @@ namespace MoodPlusAPI.Usuarios
 {
     [ApiVersion(1.0, Deprecated = true)]
     [ApiVersion(1.1)]
-    [ApiController]
     [Route("api/v{v:apiVersion}/[controller]")]
     public class UsuarioController : CoreController
     {

@@ -36,7 +36,7 @@ namespace MoodPlusAPI.Moods
             {
                 if (await _moodRepository.DayExists(new ObjectId(_requestContext.UsuarioSessao.Id), moodCreate.Dia))
                 {
-                    return Result<Mood>.Failure(ApiError.Conflict("Mood nesse dia já existe"));
+                    return Result<Mood>.Failure(ApiError.Conflict("Usuário já possuí mood cadastrado nesse dia"));
                 }
 
                 var mood = await _moodRepository.AddMoodDiario(ParaMood(moodCreate));
@@ -58,8 +58,10 @@ namespace MoodPlusAPI.Moods
             }
         }
 
-        public async Task<Result> DeletarMood(ObjectId id, DateOnly data)
+        public async Task<Result> DeletarMood(DateOnly data)
         {
+            var id = new ObjectId(_requestContext.UsuarioSessao.Id);
+
             var deleted = await _moodRepository.DeleteMoodDiario(id, data);
 
             if (!deleted)
@@ -102,7 +104,7 @@ namespace MoodPlusAPI.Moods
         {
             var moodsDiarios = await _moodRepository.GetMoodDiariosByMonth(usuarioId, mes);
 
-            return Result<Dictionary<DateOnly, string>>.Success(moodsDiarios.DistinctBy(x => x.Dia).ToDictionary(x => x.Dia, x => x.Humor));
+            return Result<Dictionary<DateOnly, string>>.Success(moodsDiarios.DistinctBy(x => x.Dia!.Value).ToDictionary(x => x.Dia!.Value, x => x.Humor));
         }
 
         private Mood ParaMood(MoodDiarioCreateDTO moodCreate)

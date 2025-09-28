@@ -22,7 +22,7 @@ namespace MoodPlusAPI.Moods
     [BsonIgnoreExtraElements]
     public class MoodDiario
     {
-        public DateOnly Dia { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+        public DateOnly? Dia { get; set; }
         public string Humor { get; set; }
         public string Sentimento { get; set; }
         public string Influencia { get; set; }

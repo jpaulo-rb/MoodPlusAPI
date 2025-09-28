@@ -24,13 +24,21 @@ namespace MoodPlusAPI.Moods
             var filter = Builders<Mood>.Filter.Eq(nameof(Mood.UsuarioId), mood.UsuarioId) & EmpresaFilter();
             var update = Builders<Mood>.Update.Push(m => m.MoodDiarios, mood.MoodDiarios.First());
 
-            var result = await _collection.UpdateOneAsync(filter, update);
+            var updatedMood = await _collection.FindOneAndUpdateAsync(
+                filter,
+                update,
+                new FindOneAndUpdateOptions<Mood>
+                {
+                    ReturnDocument = ReturnDocument.After
+                }
+            );
 
-            if (result.MatchedCount == 0)
+            if (updatedMood != null)
             {
-                await _collection.InsertOneAsync(mood);
+                return updatedMood;
             }
 
+            await _collection.InsertOneAsync(mood);
             return mood;
         }
 
@@ -153,7 +161,7 @@ namespace MoodPlusAPI.Moods
                 return [];
             }
 
-            return mood.MoodDiarios.Where(m => m.Dia.Month == month).ToList();
+            return mood.MoodDiarios.Where(m => m.Dia!.Value.Month == month).ToList();
         }
 
         public async Task<bool> DeleteMoodDiario(ObjectId userId, DateOnly dia)
